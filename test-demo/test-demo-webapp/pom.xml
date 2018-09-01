@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>Demo</groupId>
+		<artifactId>test-demo-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../test-demo-parent/pom.xml</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>test-demo-webapp</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>Demo</groupId>
+			<artifactId>test-demo-admin</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>Test Demo Webapp</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+				<artifactId>maven-antrun-extended-plugin</artifactId>
+			</plugin>
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+		</plugins>
+	</build>
+</project>

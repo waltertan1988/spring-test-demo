@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	
+	<!-- 注解方式的处理器映射器只能配对注解方式的处理器适配器！ // 注解方式的处理器映射器(同一个处理器可被多种映射器映射) //适用于3.1以下的版本 
+		<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/> 
+		//适用于3.1或以上的版本 <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/> 
+		// 注解方式的处理器适配器(都实现HandlerAdapter接口) //适用于3.1以下的版本 <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/> 
+		//适用于3.1或以上的版本 <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
+
+	<!-- 启用注解驱动则无须对上面的处理器映射器和处理器适配器作配置, 且默认加载很多参数绑定方法, 如JSON转换解析器. -->
+	<mvc:annotation-driven />
+	
+	<context:property-placeholder location="classpath:app.properties" />
+	
+	<!-- 设置freeMarker的配置文件路径 -->  
+    <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">  
+        <property name="location" value="classpath:freemarker.properties" />  
+    </bean>
+    
+	<!-- FreeMarker配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="preferFileSystemAccess" value="false" />
+		<property name="templateLoaderPaths">
+			<list>
+				<value>classpath:views/</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings" ref="freemarkerConfiguration"/>
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="base" value="/${app.name}"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="com.my.demo.base.response.DemoFreemarkerView" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="cache" value="false" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="order" value="100" />
+	</bean>
+	
+	<!-- 开启组件扫描, 扫描@Controller(或@Component, @Service, @Repository) -->
+	<context:component-scan base-package="com.my.demo.admin.controller" />
+	
+	<!-- 异常解析器 -->
+	<bean class="com.my.demo.base.response.DemoExceptionResolver"/>
+	
+	<!-- 开启自定义类型转换器 -->
+	<mvc:annotation-driven conversion-service="conversionService"/>
+	<!-- 配置类型转换器 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+			</list>
+		</property>
+	</bean>
+	<!-- 自定义Repository转换器 -->
+	<bean class="com.my.demo.base.converter.ReopsitoryConverter">
+		<constructor-arg ref="conversionService" />
+	</bean>
+</beans>

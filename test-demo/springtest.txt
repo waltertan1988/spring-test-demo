@@ -1,0 +1,63 @@
+JUnit基础部分
+一、常用注解@Test, @Before/After, @BeforeClass/AfterClass, @FixMethodOrder, @Ignore
+二、Assert
+三、TestCase & TestSuite
+
+
+---------------------------
+Spring test单元测试部分：
+一、Mock对象：
+	1.org.springframework.mock.web下提供的Servlet API的Mock，便于测试SpringMVC的web contexts，controllers和filters
+二、Unit Testing support Classes
+	1.org.springframework.test.util.ReflectionTestUtils、JdbcTestUtils、AopTestUtils
+	2.org.springframework.test.web.ModelAndViewAssert
+
+
+----------------------------
+Spring test整合测试部分：
+Spring整合测试的目标:
+    To manage Spring IoC container caching between test execution.
+    To provide Dependency Injection of test fixture instances.
+    To provide transaction management appropriate to integration testing.
+    To supply Spring-specific base classes that assist developers in writing integration tests.
+    	如：AbstractTransactionalJUnit4SpringContextTests
+
+一、常用注解：
+	1、与context相关的注解：
+	@ContextConfiguration
+	@WebAppConfiguration
+	@ContextHierarchy
+	@DirtiesContext     (classMode,methodMode)
+	
+	2、与SQL相关注解:
+	@Transactional //spring中会事务结束后提交，而在springtest中则是自动回滚
+	@Commit //不回滚
+	@Rollback
+	@BeforeTransaction、@AfterTransaction
+	@Sql、@SqlConfig、@SqlGroup
+	
+	3、其它注解
+	@Timed, @Repeat
+
+
+二、MVC Test
+MockServletContext  	// cached
+MockHttpSession
+MockHttpServletRequest
+MockHttpServletResponse
+(ServletWebRequest???)
+
+三、HtmlUnit测试页面(htmlUnit作用有限，不讲)
+
+四、maven运行TestCase
+
+-------------------
+开发速度3——单元/集成测试+CI
+http://jinnianshilongnian.iteye.com/blog/1893135
+
+ MVC测试框架详解——服务端测试
+http://jinnianshilongnian.iteye.com/blog/2004660
+
+MVC测试框架详解——客户端测试
+http://jinnianshilongnian.iteye.com/blog/2007180
+

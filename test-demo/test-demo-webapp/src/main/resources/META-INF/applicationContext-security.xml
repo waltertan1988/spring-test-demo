@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+    
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="admin" password="admin123" authorities="ROLE_ADMIN" />
+				<user name="walter" password="123456" authorities="ROLE_LOGIN_USER"/>
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+	
+	<http security="none" pattern="/resources/**"/>
+	
+	<http use-expressions="true">
+		<intercept-url pattern="/login" access="permitAll"/>
+		<intercept-url pattern="/logoutPostPage" access="permitAll"/>
+		<intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/>
+		
+		<!-- 页面通过提交账号密码到${base}/j_spring_security_check进行认证
+		<form-login 
+					login-page="/login"
+					username-parameter="username"
+					password-parameter="password"
+					authentication-failure-url="/login?error=true"
+					default-target-url="/admin/index"/> -->
+
+		<form-login authentication-failure-url="/login?error=true"
+					default-target-url="/admin/index"/>
+		
+		<logout logout-url="/logout"
+				logout-success-url="/logoutPostPage"
+				invalidate-session="true"
+				delete-cookies="JSESSIONID"/>
+				
+		<csrf disabled="true" />
+	</http>
+</beans:beans>
